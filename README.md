@@ -15,21 +15,20 @@ A concept site for a fictional burger restaurant in Barranquilla: every ingredie
 
 ## Overview
 
-Part of **WEB PARA**, a series of demo sites for local businesses. Brasa & Co. is not a real restaurant: the name, menu, prices and WhatsApp number are made up.
+A landing page concept for a fictional brand. Brasa & Co. is not a real restaurant: the name, menu, prices and WhatsApp number are made up.
 
 <table>
   <tr>
-    <td align="center" width="40%"><img src="docs/screenshots/mobile-hero.jpg" alt="Hero on a phone: BRASA in an arc above the assembled burger and the 'Ordenar ahora' button" width="100%" /><br /><sub>The hero on a phone</sub></td>
-    <td width="60%">
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-hero.jpg" alt="Hero on a phone: BRASA in an arc above the assembled burger and the 'Ordenar ahora' button" width="100%" /><br /><sub>Hero</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-menu.jpg" alt="Menu on a phone: Burgers, Acompañantes and Bebidas tabs above a swipeable card for 'La Brasa' with its price stamp" width="100%" /><br /><sub>Menu</sub></td>
+    <td align="center" width="33%"><img src="docs/screenshots/mobile-story.jpg" alt="Story on a phone: cheddar dripping from the top edge, the grill video with a 'Hecho a la brasa' seal and the heading 'Fuego lento, pan tostado y cero atajos.'" width="100%" /><br /><sub>Story</sub></td>
+  </tr>
+</table>
 
 - **Hero:** a 198-frame image sequence of the burger assembling itself, scrubbed by scroll.
 - **Menu:** tabs for burgers, sides and drinks; a swipeable carousel on phones.
 - **Story:** a looping grill video under dripping cheddar, with animated counters.
 - **Order:** opening hours, address, map and a WhatsApp button with a pre-written message.
-
-</td>
-  </tr>
-</table>
 
 ## How it's built
 
