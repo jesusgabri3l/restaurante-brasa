@@ -1,0 +1,42 @@
+@use '../abstracts' as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  // Sombra dura retro al hover: el color de la sombra se define por variante.
+  &:hover {
+    transform: translate(-3px, -3px);
+    @include hard-shadow(var(--button-shadow, var(--ink)));
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+
+  &--beige {
+    --button-shadow: var(--cheese); // va sobre fondos rojos
+    background: var(--beige);
+    color: var(--red);
+  }
+
+  &--red {
+    --button-shadow: var(--ink); // un botón rojo con sombra roja se fundiría
+    background: var(--red);
+    color: var(--beige);
+  }
+
+  &--small {
+    padding: 0.55rem 1.4rem;
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,25 @@
+---
+// Separador SVG absoluto, pegado al borde de su sección padre.
+// edge: top = sobre el borde superior (hacia afuera), inner = dentro de la sección, bottom = bajo el borde inferior.
+interface Props {
+  variant: 'wave';
+  color: 'red' | 'beige' | 'stage';
+  edge?: 'top' | 'inner' | 'bottom';
+}
+
+const { variant, color, edge = 'top' } = Astro.props;
+
+const paths = {
+  wave: 'M0 48 C 180 0 360 96 540 48 S 900 0 1080 48 S 1320 80 1440 36 V128 H0 Z',
+} as const;
+---
+
+<svg
+  class={`divider divider--${variant} divider--${color} divider--${edge}`}
+  viewBox="0 0 1440 128"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={paths[variant]} fill="currentColor"></path>
+</svg>

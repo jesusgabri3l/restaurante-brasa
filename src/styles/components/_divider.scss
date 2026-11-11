@@ -1,0 +1,35 @@
+.divider {
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: clamp(40px, 7vw, 110px);
+  pointer-events: none;
+
+  &--red {
+    color: var(--red);
+  }
+
+  &--stage {
+    color: var(--stage-edge);
+  }
+
+  &--beige {
+    color: var(--beige);
+  }
+
+  &--top {
+    top: 0;
+    transform: translateY(calc(-100% + 1px));
+  }
+
+  &--inner {
+    top: 0;
+  }
+
+  // Colgando hacia abajo: el path se voltea para que el relleno quede arriba y la onda abajo.
+  &--bottom {
+    bottom: 0;
+    transform: translateY(calc(100% - 1px)) scaleY(-1);
+  }
+}

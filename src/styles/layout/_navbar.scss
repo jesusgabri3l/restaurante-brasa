@@ -1,0 +1,153 @@
+@use '../abstracts' as *;
+
+// Etiqueta de empaque retro: barra beige, borde rojo grueso y, al bajar, sombra dura desplazada (sin blur).
+.navbar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 4vw;
+  pointer-events: none;
+
+  @include until-tablet {
+    padding-top: calc(1.25rem + env(safe-area-inset-top));
+  }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    width: 100%;
+    max-width: 62rem;
+    padding: 0.45rem 0.45rem 0.45rem 1.4rem;
+    background: var(--beige);
+    border: 3px solid var(--red);
+    border-radius: 1.25rem;
+    color: var(--red);
+    pointer-events: auto;
+    box-shadow: 0 0 0 var(--red);
+    transition:
+      padding 0.3s ease,
+      box-shadow 0.3s ease,
+      max-width 0.3s ease;
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+
+  // Al salir del hero la etiqueta se compacta y gana la sombra dura retro.
+  &[data-past-hero] &__bar {
+    max-width: 56rem;
+    padding-block: 0.3rem;
+    box-shadow: 5px 5px 0 var(--red);
+  }
+
+  &__logo {
+    @include display-font;
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1.35rem;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+
+    // En móvil la etiqueta solo tendría el botón: el logo va siempre para que no quede un bloque vacío.
+    @include until-tablet {
+      display: flex;
+    }
+  }
+
+  &[data-past-hero] &__logo {
+    display: flex;
+    animation: navbar-logo-in 0.35s ease both;
+
+    @include reduced-motion {
+      animation: none;
+    }
+  }
+
+  // Cara de Chispa como logo: sobresale un poco de la etiqueta, como un sello.
+  &__mascot {
+    display: block;
+    width: 2.9rem;
+    height: 2.9rem;
+    margin-block: -0.6rem;
+    transform: rotate(-6deg);
+    transition: transform 0.2s ease;
+  }
+
+  &__logo:hover &__mascot {
+    transform: rotate(4deg) scale(1.06);
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-inline: auto;
+  }
+
+  &__link {
+    display: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    // Estrellita de empaque entre enlaces.
+    & + &::before {
+      content: '✦';
+      margin-right: 1.1rem;
+      font-size: 0.6rem;
+      vertical-align: 0.15em;
+      opacity: 0.7;
+    }
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    @include from-tablet {
+      display: inline;
+    }
+  }
+
+  // Sello: sobresale por debajo de la etiqueta, levemente girado.
+  &__cta {
+    @include display-font;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding: 0.55rem 1.3rem;
+    background: var(--red);
+    border: 3px solid var(--red);
+    border-radius: 0.9rem;
+    color: var(--beige);
+    font-size: 1.05rem;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    transform: translateY(35%) rotate(-3deg);
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(30%) rotate(-1deg);
+    }
+
+    @include from-tablet {
+      margin-left: 0;
+    }
+  }
+}
+
+@keyframes navbar-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.4rem);
+  }
+}

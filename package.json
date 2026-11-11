@@ -1,0 +1,27 @@
+{
+  "name": "brasa-demo",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "7.4.2",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.18"
+  },
+  "devDependencies": {
+    "sass": "^1.80.0",
+    "sharp": "^0.33.5"
+  },
+  "overrides": {
+    "@astrojs/compiler-binding": "0.5.2",
+    "@astrojs/compiler-binding-win32-x64-msvc": "0.5.2"
+  }
+}

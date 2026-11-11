@@ -1,0 +1,56 @@
+---
+import BaseExpressionLines from '../base/BaseExpressionLines.astro';
+import HomeMenuCard from './HomeMenuCard.astro';
+import { MENU } from '../../data/menu';
+---
+
+<section class="menu" id="menu" aria-labelledby="menu-title">
+  <header class="menu__header">
+    <p class="menu__eyebrow">Carta</p>
+    <h2 class="menu__title" id="menu-title">
+      Lo que sale de la parrilla
+      <BaseExpressionLines class="menu__sparks" color="var(--red)" rotate={-20} />
+    </h2>
+  </header>
+
+  <div class="menu__tabs" role="tablist" aria-label="Categorías del menú" data-menu-tabs>
+    {MENU.map((category, index) => (
+      <button
+        class="menu__tab"
+        role="tab"
+        type="button"
+        id={`tab-${category.id}`}
+        aria-controls={`panel-${category.id}`}
+        aria-selected={index === 0}
+        tabindex={index === 0 ? 0 : -1}
+      >
+        {category.label}
+      </button>
+    ))}
+  </div>
+
+  {MENU.map((category, index) => (
+    <div
+      class="menu__panel"
+      role="tabpanel"
+      id={`panel-${category.id}`}
+      aria-labelledby={`tab-${category.id}`}
+      hidden={index !== 0}
+    >
+      <ul class="menu__grid" tabindex="0" aria-label={`Platos de ${category.label}`}>
+        {category.items.map((item) => (
+          <HomeMenuCard item={item} />
+        ))}
+      </ul>
+      <div class="menu__controls" data-menu-controls>
+        <button class="menu__arrow" type="button" aria-label="Plato anterior" data-menu-prev>&larr;</button>
+        <div class="menu__dots">
+          {category.items.map((item, itemIndex) => (
+            <button class="menu__dot" type="button" aria-label={`Ir a ${item.name}`} aria-current={itemIndex === 0 ? 'true' : undefined} data-menu-dot></button>
+          ))}
+        </div>
+        <button class="menu__arrow" type="button" aria-label="Plato siguiente" data-menu-next>&rarr;</button>
+      </div>
+    </div>
+  ))}
+</section>

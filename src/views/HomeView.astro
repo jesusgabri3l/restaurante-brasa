@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TheNavbar from '../components/layout/TheNavbar.astro';
+import TheFooter from '../components/layout/TheFooter.astro';
+import HomeHero from '../components/home/HomeHero.astro';
+import HomeMenu from '../components/home/HomeMenu.astro';
+import HomeStory from '../components/home/HomeStory.astro';
+import HomeOrder from '../components/home/HomeOrder.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title="Brasa & Co. | Hamburguesas a las brasas" description={SITE.description}>
+  <TheNavbar />
+  <main id="contenido">
+    <HomeHero />
+    <HomeMenu />
+    <HomeStory />
+    <HomeOrder />
+  </main>
+  <TheFooter />
+</BaseLayout>
+
+<script>
+  import '../scripts/home';
+</script>

@@ -1,0 +1,55 @@
+---
+import BaseDivider from '../base/BaseDivider.astro';
+import { CREDIT_LINKS, SITE, whatsappUrl } from '../../config/site';
+
+const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<footer class="footer">
+  <BaseDivider variant="wave" color="red" edge="top" />
+  <div class="footer__columns">
+    <div class="footer__column footer__column--brand">
+      <p class="footer__brand">Brasa &amp; Co.</p>
+      <p class="footer__tagline">Hamburguesas a las brasas, hechas al momento.</p>
+    </div>
+
+    <nav class="footer__column" aria-label="Pie de página">
+      <h2 class="footer__heading">Navegar</h2>
+      <ul class="footer__list">
+        <li><a class="footer__link" href="#menu">Menú</a></li>
+        <li><a class="footer__link" href="#historia">Nuestra historia</a></li>
+        <li><a class="footer__link" href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__column">
+      <h2 class="footer__heading">Visítanos</h2>
+      <ul class="footer__list">
+        {SITE.hours.map(([days, time]) => <li>{days}: {time}</li>)}
+        <li><address>{SITE.address}</address></li>
+        <li>
+          <a class="footer__link" href={whatsappUrl} target="_blank" rel="noopener" aria-label="Escribir a Brasa y Co. por WhatsApp (abre en una pestaña nueva)">WhatsApp</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer__column">
+      <h2 class="footer__heading">Redes</h2>
+      <ul class="footer__list">
+        {SITE.socials.map(([network, handle]) => <li>{network}: {handle}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <p>&copy; {year} Brasa &amp; Co. Negocio ficticio, web de concepto.</p>
+    <p class="footer__credit">
+      Diseño y desarrollo: Jesús Gabriel
+      {CREDIT_LINKS.map(({ label, href }) => (
+        <a class="footer__link" href={href} target="_blank" rel="noopener" aria-label={`Jesús Gabriel en ${label} (abre en una pestaña nueva)`}>{label}</a>
+      ))}
+      <img class="footer__mascot" src={`${base}/images/mascot/mascot-thumbs.webp`} alt="" aria-hidden="true" width="415" height="560" loading="lazy" decoding="async" />
+    </p>
+  </div>
+</footer>

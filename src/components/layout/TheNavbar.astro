@@ -1,0 +1,20 @@
+---
+import { whatsappUrl } from '../../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<!-- Etiqueta de empaque retro: una sola barra beige con borde rojo; el logo aparece al salir del hero. -->
+<header class="navbar" data-navbar>
+  <div class="navbar__bar">
+    <a class="navbar__logo" href="#top" aria-label="Brasa y Co., inicio">
+      <img class="navbar__mascot" src={`${base}/images/mascot/mascot-face.webp`} alt="" width="160" height="160" />
+    </a>
+    <nav class="navbar__menu" aria-label="Principal">
+      <a class="navbar__link" href="#menu">Menú</a>
+      <a class="navbar__link" href="#historia">Historia</a>
+      <a class="navbar__link" href="#contacto">Contacto</a>
+    </nav>
+    <a class="navbar__cta" href={whatsappUrl} target="_blank" rel="noopener">Ordenar</a>
+  </div>
+</header>

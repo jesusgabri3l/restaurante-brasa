@@ -1,0 +1,60 @@
+---
+import { STORY_STATS } from '../../data/menu';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="story" id="historia" aria-labelledby="story-title">
+  <div
+    class="story__drip"
+    style={`background-image:url(${base}/images/story/cheddar-drip.webp)`}
+    aria-hidden="true"
+    data-drip
+  ></div>
+
+  <div class="story__layout">
+    <div class="story__media">
+      <div class="story__frame">
+        <video
+          class="story__photo"
+          src={`${base}/images/story/parrilla-loop.mp4`}
+          poster={`${base}/images/story/parrilla.webp`}
+          aria-label="Carne a la brasa con llamas en la parrilla"
+          width="1600"
+          height="1000"
+          muted
+          loop
+          playsinline
+          preload="none"
+          data-loop-video
+        ></video>
+      </div>
+      <svg class="story__seal" viewBox="0 0 160 160" role="img" aria-label="Hecho a la brasa, desde 2019" data-seal>
+        <circle cx="80" cy="80" r="78" fill="var(--cheese)" />
+        <circle cx="80" cy="80" r="40" fill="none" stroke="var(--ink)" stroke-width="2" />
+        <path id="seal-circle" d="M80 80m-58 0a58 58 0 1 1 116 0a58 58 0 1 1-116 0" fill="none" />
+        <text class="story__seal-text" aria-hidden="true">
+          <textPath href="#seal-circle" textLength="360" lengthAdjust="spacing">HECHO A LA BRASA ✦ DESDE 2019 ✦ </textPath>
+        </text>
+        <path d="M80 56c4 10 14 15 14 28a14 14 0 0 1-28 0c0-8 4-11 6-16 2 4 4 6 6 6-2-8 0-14 2-18z" fill="var(--red)" />
+        <path d="M80 80c2 5 6 7 6 12a6 6 0 0 1-12 0c0-4 3-6 6-12z" fill="var(--ink)" />
+      </svg>
+    </div>
+    <div class="story__copy">
+      <p class="story__eyebrow">Nuestra historia</p>
+      <h2 class="story__title" id="story-title">Fuego lento, pan tostado y cero atajos.</h2>
+      <p class="story__text">
+        Empezamos con una parrilla de barrio y una receta. Seguimos igual: carne fresca, pan del día y brasa de verdad.
+      </p>
+    </div>
+  </div>
+
+  <dl class="story__stats">
+    {STORY_STATS.map((stat) => (
+      <div class="story__stat">
+        <dt class="story__stat-label">{stat.label}</dt>
+        <dd class="story__stat-value" data-count={stat.value} data-format={stat.format}>{stat.value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

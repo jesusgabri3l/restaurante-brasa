@@ -1,0 +1,81 @@
+@use '../abstracts' as *;
+
+.footer {
+  position: relative;
+  z-index: 3;
+  padding: 5rem 5vw 2rem;
+  background: var(--red);
+  color: var(--beige);
+
+  &__columns {
+    display: grid;
+    gap: 2.5rem;
+    max-width: $content-width;
+    margin: 0 auto;
+
+    @include from-tablet {
+      grid-template-columns: 1.4fr 1fr 1.3fr 1.2fr;
+    }
+  }
+
+  &__brand {
+    @include display-font;
+    margin-bottom: 0.75rem;
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  &__tagline {
+    max-width: 18rem;
+  }
+
+  &__heading {
+    @include eyebrow;
+    margin-bottom: 1rem;
+    color: var(--cheese-text);
+  }
+
+  &__list {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.95rem;
+
+    address {
+      font-style: normal;
+    }
+  }
+
+  &__link {
+    color: inherit;
+    text-underline-offset: 4px;
+
+    &:hover {
+      color: var(--cheese-text);
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    justify-content: space-between;
+    max-width: $content-width;
+    margin: 3.5rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 2px dashed rgb(251 232 211 / 0.4);
+    font-size: 0.85rem;
+  }
+
+  &__credit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1rem;
+  }
+
+  &__mascot {
+    width: auto;
+    height: 3rem;
+  }
+}

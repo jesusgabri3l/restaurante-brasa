@@ -1,0 +1,11 @@
+@use '../abstracts' as *;
+
+h1,
+h2,
+h3 {
+  @include display-font;
+}
+
+h2 {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+}

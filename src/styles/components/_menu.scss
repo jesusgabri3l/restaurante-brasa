@@ -1,0 +1,157 @@
+@use '../abstracts' as *;
+
+.menu {
+  position: relative;
+  z-index: 2;
+  padding: calc(clamp(40px, 7vw, 110px) + 4rem) 5vw 8rem; // la onda del hero cuelga sobre el borde superior; 4rem como Ordenar
+  background: var(--beige);
+  color: var(--red);
+  @include full-screen-until-desktop;
+  @include paper-grain;
+
+  &__header {
+    max-width: $content-width;
+    margin: 0 auto 1.5rem;
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+    margin-bottom: 0.75rem;
+    color: var(--red);
+  }
+
+  &__title {
+  }
+
+  &__sparks {
+    display: inline-block;
+    width: 0.7em;
+    margin-left: 0.2em;
+    vertical-align: top;
+  }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    max-width: $content-width;
+    margin: 0 auto 1rem;
+  }
+
+  &__tab {
+    padding: 0.7rem 1.6rem;
+    background: transparent;
+    border: 3px solid var(--red);
+    border-radius: 999px;
+    color: var(--red);
+    font-weight: 600;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+
+    &[aria-selected='true'] {
+      background: var(--red);
+      color: var(--beige);
+    }
+  }
+
+  &__panel {
+    max-width: $content-width;
+    margin: 0 auto;
+  }
+
+  // Móvil: carrusel con scroll-snap (un plato y el siguiente asomándose). La foto sobresale
+  // de la card, por eso el scroller lleva padding-top: overflow-x recorta también en Y.
+  &__grid {
+    display: flex;
+    gap: 1rem;
+    margin-inline: -5vw;
+    padding: 0.5rem 5vw 1.5rem;
+    overflow-x: auto;
+    scroll-padding-inline: 5vw;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > * {
+      flex: 0 0 min(72%, 18rem);
+      scroll-snap-align: start;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--red);
+      outline-offset: -3px;
+    }
+
+    @include from-desktop {
+      display: grid;
+      gap: 3rem 1.5rem;
+      margin-inline: 0;
+      padding: 0;
+      overflow: visible;
+      grid-template-columns: repeat(3, 1fr);
+      scroll-snap-type: none;
+
+      > * {
+        flex: none;
+      }
+    }
+  }
+
+  // Flechas y puntos del carrusel: solo móvil/tablet.
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    @include from-desktop {
+      display: none;
+    }
+  }
+
+  &__arrow {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: transparent;
+    border: 3px solid var(--red);
+    border-radius: 50%;
+    color: var(--red);
+    font-size: 1.2rem;
+  }
+
+  &__dots {
+    display: flex;
+  }
+
+  // Botón de 2rem de área táctil con el punto dibujado en ::before.
+  &__dot {
+    position: relative;
+    width: 1.5rem;
+    height: 2rem;
+    background: none;
+    border: 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 0.6rem;
+      height: 0.6rem;
+      border: 2px solid var(--red);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: background 0.2s ease;
+    }
+
+    &[aria-current='true']::before {
+      background: var(--red);
+    }
+  }
+}

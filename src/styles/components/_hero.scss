@@ -1,0 +1,231 @@
+@use '../abstracts' as *;
+
+.hero {
+  position: relative;
+  z-index: 3; // por encima de .menu: la onda roja colgante y el CTA pintan sobre él
+  color: var(--beige);
+
+  &__stage {
+    position: relative;
+    height: 100vh;
+    // lvh y no svh: al primer scroll en móvil se esconde la barra del navegador y el viewport crece;
+    // con svh el escenario fijado quedaba corto y asomaba el color de la siguiente sección abajo.
+    height: 100lvh;
+    overflow: hidden;
+    // Fondo infinito de estudio (capas de arriba abajo): franja final plana (empata con la onda),
+    // viñeta en bordes, spot detrás de la hamburguesa, banda de piso y base.
+    background:
+      linear-gradient(to top, var(--stage-edge) 0 3%, transparent 14%),
+      radial-gradient(ellipse 95% 90% at 50% 52%, transparent 50%, #9b1a0e 100%),
+      radial-gradient(ellipse 42vw 36vh at 50% 56%, #d8391c 0%, #c8301a 50%, transparent 100%),
+      radial-gradient(ellipse 62vw 15vh at 50% 84%, #c12813 0%, #c12813 55%, transparent 100%),
+      #b02214;
+  }
+
+  &__tagline {
+    position: absolute;
+    left: 50%;
+    top: 58%;
+    z-index: 5;
+    width: min(92%, 36rem);
+    margin: 0;
+    opacity: 1;
+    transform: translateX(-50%);
+    pointer-events: none;
+
+    @include until-tablet {
+      top: calc(11% + 2.5rem + 27vw); // justo debajo del arco de BRASA (alto del título = 32% de su ancho de 92vw)
+    }
+  }
+
+  // Mismo arco que BRASA, en pequeño.
+  &__tagline-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    animation: hero-intro-in 0.6s ease-out 0.15s both;
+
+    @include reduced-motion {
+      animation: none;
+    }
+  }
+
+  &__tagline-text {
+    font-size: 44px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    fill: var(--beige);
+  }
+
+  &__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  &__title {
+    position: absolute;
+    inset: 11% 11% auto;
+    z-index: 1;
+
+    // En móvil BRASA casi de borde a borde: más presencia.
+    @include until-tablet {
+      inset: calc(11% + 2.5rem) 4% auto; // +2.5rem: aire bajo el navbar
+    }
+  }
+
+  &__title-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    // Entrada en CSS y no en GSAP: BRASA es el LCP y así no espera a que cargue el JS.
+    animation: hero-intro-in 0.6s ease-out both;
+
+    @include reduced-motion {
+      animation: none;
+    }
+  }
+
+  &__title-text {
+    @include display-font;
+    font-size: 225px; // Caprasimo es ancha: a 225 BRASA cabe en el arco sin cortarse
+    letter-spacing: -0.02em;
+    fill: var(--beige);
+  }
+
+  // Líneas de expresión: separadas de la hamburguesa y solo cuando ya está armada.
+  &__sparks {
+    position: absolute;
+    right: -4%;
+    top: 52%;
+    width: 11%;
+    // `scale` y no `transform`: el componente ya usa transform inline para la rotación.
+    opacity: 0;
+    scale: 0.6;
+    transform-origin: left center;
+    transition:
+      opacity 0.35s ease,
+      scale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &[data-visible] {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  &__floaters,
+  &__particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  &__floaters {
+    z-index: 2;
+  }
+
+  &__particles {
+    z-index: 3;
+  }
+
+  &__floater {
+    position: absolute;
+    height: auto;
+    will-change: transform;
+  }
+
+  &__burger {
+    position: absolute;
+    left: 50%;
+    bottom: 2vh;
+    z-index: 4;
+    width: min(80vh, 96vw);
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+
+    // En móvil la hamburguesa va centrada en vertical.
+    @include until-tablet {
+      top: 50%;
+      bottom: auto;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__canvas {
+    width: 100%;
+    height: 100%;
+    // Los ingredientes entran por el borde superior del video: se difuminan en vez de salir de una raya.
+    // Termina en 13%: el pan de arriba ya armado empieza en 15% del cuadro y queda opaco.
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 13%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 13%);
+  }
+
+  &__cta {
+    position: absolute;
+    left: 50%;
+    bottom: 1.25rem;
+    z-index: 6;
+    width: max-content;
+    white-space: nowrap;
+    background: var(--beige);
+    color: var(--red);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 1rem);
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease,
+      box-shadow 0.2s ease,
+      visibility 0.4s;
+
+    &[data-visible] {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%);
+    }
+
+    &[data-visible]:hover {
+      transform: translate(calc(-50% - 3px), -3px);
+    }
+  }
+
+  // Chispa se asoma por encima del botón cuando aparece: sus manos se apoyan en el borde superior.
+  &__cta-mascot {
+    position: absolute;
+    bottom: calc(100% - 2px); // la línea roja de la imagen queda justo sobre el borde del botón
+    left: 50%;
+    z-index: -1;
+    width: 5.5rem;
+    height: auto;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 45%);
+    transition:
+      opacity 0.3s ease 0.25s,
+      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+
+    @include reduced-motion {
+      transition: none;
+    }
+  }
+
+  &__cta[data-visible] &__cta-mascot {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+// Entrada sencilla de BRASA y el subtítulo: aparecen subiendo un poco.
+@keyframes hero-intro-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}

@@ -1,0 +1,73 @@
+---
+import { HERO_FLOATERS, HERO_TAGLINE, HERO_TITLE } from '../../config/hero';
+import BaseExpressionLines from '../base/BaseExpressionLines.astro';
+import BaseDivider from '../base/BaseDivider.astro';
+import { whatsappUrl } from '../../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="hero" id="top" aria-label="Brasa y Co.">
+  <!-- Spacer propio del pin: si GSAP crea el suyo, mueve el escenario en el DOM y reinicia las animaciones CSS (parpadeo de BRASA). -->
+  <div data-hero-pin-spacer>
+  <div class="hero__stage" data-hero-stage>
+    <h1 class="hero__title" aria-label="Brasa">
+      <svg class="hero__title-svg" viewBox="0 0 1000 320" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="hero-title-arc" d="M 0 300 Q 500 150 1000 300"></path>
+        </defs>
+        <text class="hero__title-text" text-anchor="middle">
+          <textPath href="#hero-title-arc" startOffset="50%">{HERO_TITLE}</textPath>
+        </text>
+      </svg>
+    </h1>
+    <p class="hero__tagline" data-hero-tagline>
+      <span class="hero__sr">{HERO_TAGLINE}</span>
+      <svg class="hero__tagline-svg" viewBox="0 0 1000 110" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="hero-tagline-arc" d="M 0 100 Q 500 40 1000 100"></path>
+        </defs>
+        <text class="hero__tagline-text" text-anchor="middle">
+          <textPath href="#hero-tagline-arc" startOffset="50%">{HERO_TAGLINE}</textPath>
+        </text>
+      </svg>
+    </p>
+
+    <div class="hero__floaters" aria-hidden="true">
+      {HERO_FLOATERS.map((floater) => (
+        <img
+          class="hero__floater"
+          src={`${base}/images/floaters/${floater.file}`}
+          alt=""
+          width="400"
+          height="400"
+          fetchpriority="low"
+          decoding="async"
+          style={`left:${floater.x}%;top:${floater.y}%;width:${floater.size}vw`}
+          data-floater
+          data-depth={floater.depth}
+          data-spin={floater.spin}
+        />
+      ))}
+    </div>
+
+    <canvas class="hero__particles" data-particles aria-hidden="true"></canvas>
+
+    <div class="hero__burger">
+      <canvas
+        class="hero__canvas"
+        data-hero-canvas
+        role="img"
+        aria-label="Hamburguesa que se arma capa por capa mientras haces scroll"
+      ></canvas>
+      <BaseExpressionLines class="hero__sparks" rotate={-8} />
+    </div>
+
+    <a class="button button--beige hero__cta" href={whatsappUrl} target="_blank" rel="noopener" data-hero-cta>
+      <img class="hero__cta-mascot" src={`${base}/images/mascot/mascot-peek.webp`} alt="" aria-hidden="true" width="560" height="414" />
+      Ordenar ahora <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  </div>
+  <BaseDivider variant="wave" color="stage" edge="bottom" />
+</section>

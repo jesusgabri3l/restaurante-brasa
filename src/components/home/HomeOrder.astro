@@ -1,0 +1,45 @@
+---
+import BaseExpressionLines from '../base/BaseExpressionLines.astro';
+import BaseDivider from '../base/BaseDivider.astro';
+import { SITE, whatsappUrl } from '../../config/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="order" id="contacto" aria-labelledby="order-title">
+  <BaseDivider variant="wave" color="beige" edge="top" />
+  <div class="order__layout">
+    <div class="order__info">
+      <p class="order__eyebrow">Ordenar</p>
+      <h2 class="order__title" id="order-title">Escríbenos y llega caliente.</h2>
+      <div class="order__cta">
+        <a class="button button--red" href={whatsappUrl} target="_blank" rel="noopener">Pedir por WhatsApp</a>
+        <BaseExpressionLines class="order__sparks" color="var(--red)" rotate={-15} />
+      </div>
+
+      <h3 class="order__subtitle">Horario</h3>
+      <dl class="order__hours">
+        {SITE.hours.map(([days, time]) => (
+          <div class="order__hours-row">
+            <dt>{days}</dt>
+            <dd>{time}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <h3 class="order__subtitle">Dirección</h3>
+      <address class="order__address">{SITE.address}</address>
+      <img class="order__mascot" src={`${base}/images/mascot/mascot-wave.webp`} alt="" aria-hidden="true" width="436" height="560" loading="lazy" decoding="async" data-mascot-wave />
+    </div>
+
+    <img
+      class="order__map"
+      src={`${base}/images/map.webp`}
+      alt={`Mapa con la ubicación de Brasa y Co.: ${SITE.address}`}
+      width="1200"
+      height="900"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+</section>

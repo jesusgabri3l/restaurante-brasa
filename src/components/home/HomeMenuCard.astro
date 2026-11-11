@@ -1,0 +1,26 @@
+---
+import type { MenuItem } from '../../data/menu';
+
+interface Props {
+  item: MenuItem;
+}
+
+const { item } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<li class="menu-card" data-menu-card>
+  <img
+    class="menu-card__image"
+    src={`${base}/images/menu/${item.image}`}
+    alt={item.alt}
+    width="1000"
+    height="1000"
+    loading="lazy"
+    decoding="async"
+  />
+  <h3 class="menu-card__name">{item.name}</h3>
+  <p class="menu-card__description">{item.description}</p>
+  <p class="menu-card__price">{item.price}</p>
+  {item.badge && <p class="menu-card__badge"><span aria-hidden="true">★</span> {item.badge}</p>}
+</li>
