@@ -43,7 +43,27 @@ A landing page concept for a fictional brand. Brasa & Co. is not a real restaura
 
 ## PageSpeed
 
-<!-- pagespeed -->
+PageSpeed Insights on the [live demo](https://jesusgabri3l.github.io/restaurante-brasa/), November 12, 2026:
+
+<table>
+  <tr>
+    <th width="50%">Mobile</th>
+    <th width="50%">Desktop</th>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/pagespeed-mobile-2026-11-12.png" alt="PageSpeed mobile: Performance 70, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+    <td><img src="docs/screenshots/pagespeed-desktop-2026-11-12.png" alt="PageSpeed desktop: Performance 70, Accessibility 100, Best Practices 100, SEO 100" width="100%" /></td>
+  </tr>
+</table>
+
+| PageSpeed | Mobile | Desktop |
+|---|---|---|
+| First Contentful Paint | 0.8 s | 0.3 s |
+| Largest Contentful Paint | 1.8 s | 0.4 s |
+| Cumulative Layout Shift | 0 | 0 |
+| Total Blocking Time | 3,130 ms | 12,990 ms |
+
+**Why performance is 70: a trade-off on purpose.** The page paints fast and nothing shifts. The score comes from Total Blocking Time: the 198 hero frames start downloading and decoding as soon as the page opens, and PageSpeed's throttled CPU counts that decoding as main-thread work. Loading them only after the first scroll would raise the score, but a quick first scroll would skip frames. I kept the burger assembling smoothly from the very first scroll.
 
 ## Development
 
