@@ -46,6 +46,16 @@ export function startMenuTabs() {
   const panels = Array.from(document.querySelectorAll<HTMLElement>('.menu__panel'));
   startMenuCarousels();
 
+  // Lazy dejaba las fotos de abajo y las de pestañas ocultas sin bajar hasta verlas (y compitiendo con los
+  // cuadros del hero). Una pantalla antes del menú se piden todas y se decodifican, así ya están listas.
+  const preloadImages = () =>
+    document.querySelectorAll<HTMLImageElement>('.menu-card__image').forEach((image) => {
+      image.loading = 'eager';
+      image.fetchPriority = 'high';
+      image.decode().catch(() => undefined);
+    });
+  ScrollTrigger.create({ trigger: '#menu', start: 'top 200%', once: true, onEnter: preloadImages });
+
   // Las cards aparecen escalonadas.
   const enterCards = (panel: HTMLElement) => {
     if (prefersReducedMotion()) return;
