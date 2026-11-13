@@ -161,10 +161,7 @@
   &__canvas {
     width: 100%;
     height: 100%;
-    // Los ingredientes entran por el borde superior del video: se difuminan en vez de salir de una raya.
-    // Termina en 13%: el pan de arriba ya armado empieza en 15% del cuadro y queda opaco.
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 13%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 13%);
+    // El difuminado del borde superior se pinta dentro del canvas (hero-sequence.ts): mask-image costaba en cada cuadro.
   }
 
   &__cta {

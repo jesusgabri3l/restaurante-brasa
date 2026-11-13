@@ -10,13 +10,15 @@ import { prefersReducedMotion } from './motion';
 const LAST_FRAME = HERO_FRAME_COUNT - 1;
 const LOAD_STEP = 4;
 const LOAD_CONCURRENCY = 6;
+// Cuadros decodificados alrededor del actual. Los 198 decodificados pesan ~1 GB (1080x1080): Chrome los
+// descartaba y drawImage los volvía a decodificar en el hilo principal en pleno scroll (el tirón).
+const DECODED_RADIUS = 10;
 
+// Se guarda el webp comprimido (~47 KB); createImageBitmap(blob) decodifica fuera del hilo principal.
 const loadFrame = (url: string) =>
-  new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.src = url;
-    // decode() antes de usarlo: así drawImage no decodifica en pleno scroll (tirones en iOS).
-    image.decode().then(() => resolve(image), reject);
+  fetch(url).then((response) => {
+    if (!response.ok) throw new Error(url);
+    return response.blob();
   });
 
 // Orden de carga: primer y último cuadro, luego 1 de cada 4, luego el resto.
@@ -37,18 +39,61 @@ export async function startHeroSequence() {
   if (!stage || !canvas || !context) return;
 
   const device = window.matchMedia(MOBILE_QUERY).matches ? 'mobile' : 'desktop';
-  const frames: (HTMLImageElement | undefined)[] = new Array(HERO_FRAME_COUNT);
+  const frames: (Blob | undefined)[] = new Array(HERO_FRAME_COUNT);
+  const bitmaps = new Map<number, ImageBitmap>();
+  const decoding = new Set<number>();
   const reducedMotion = prefersReducedMotion();
   let currentFrame = reducedMotion ? LAST_FRAME : 0;
+  let drawnFrame = -1;
 
   const draw = () => {
-    // Si el cuadro pedido aún no carga, usa el más cercano hacia atrás.
-    let index = currentFrame;
-    while (index > 0 && !frames[index]) index--;
-    const frame = frames[index];
-    if (!frame) return;
+    // Si el cuadro pedido aún no está decodificado, usa el decodificado más cercano.
+    let index = -1;
+    for (let distance = 0; distance <= DECODED_RADIUS * 2 && index < 0; distance++) {
+      if (bitmaps.has(currentFrame - distance)) index = currentFrame - distance;
+      else if (bitmaps.has(currentFrame + distance)) index = currentFrame + distance;
+    }
+    if (index < 0 || index === drawnFrame) return;
+    drawnFrame = index;
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(frame, 0, 0, canvas.width, canvas.height);
+    context.drawImage(bitmaps.get(index)!, 0, 0, canvas.width, canvas.height);
+    // Los ingredientes entran por el borde superior: se difuminan en vez de salir de una raya.
+    // Termina en 13%: el pan de arriba ya armado empieza en 15% del cuadro y queda opaco.
+    const fade = context.createLinearGradient(0, 0, 0, canvas.height * 0.13);
+    fade.addColorStop(0, 'rgb(0 0 0 / 0)');
+    fade.addColorStop(1, '#000');
+    context.globalCompositeOperation = 'destination-in';
+    context.fillStyle = fade;
+    // Todo el lienzo: destination-in borra lo que quede fuera del rectángulo (el degradado sigue opaco tras 13%).
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.globalCompositeOperation = 'source-over';
+  };
+
+  const decodeAround = (center: number) => {
+    bitmaps.forEach((bitmap, index) => {
+      if (Math.abs(index - center) <= DECODED_RADIUS * 2 || index === drawnFrame) return;
+      bitmap.close();
+      bitmaps.delete(index);
+    });
+    for (let distance = 0; distance <= DECODED_RADIUS; distance++) {
+      for (const index of [center + distance, center - distance]) {
+        const blob = frames[index];
+        if (!blob || bitmaps.has(index) || decoding.has(index)) continue;
+        decoding.add(index);
+        createImageBitmap(blob)
+          .then((bitmap) => {
+            if (Math.abs(index - currentFrame) > DECODED_RADIUS * 2) return bitmap.close();
+            bitmaps.set(index, bitmap);
+            if (Math.abs(index - currentFrame) < Math.abs(drawnFrame - currentFrame)) draw();
+          })
+          .catch(() => undefined)
+          .finally(() => decoding.delete(index));
+      }
+    }
+  };
+
+  const decodeNow = async (index: number) => {
+    bitmaps.set(index, await createImageBitmap(frames[index]!));
   };
 
   const showProgress = (progress: number) => {
@@ -57,16 +102,18 @@ export async function startHeroSequence() {
     if (tagline) tagline.style.opacity = String(Math.max(0, 1 - progress * 25));
     cta?.toggleAttribute('data-visible', progress > 0.94);
     sparks?.toggleAttribute('data-visible', progress > 0.97);
+    decodeAround(currentFrame);
     draw();
   };
 
-  const [firstFrame] = await Promise.all([loadFrame(heroFrameUrl(device, 0))]);
-  frames[0] = firstFrame;
-  canvas.width = firstFrame.naturalWidth;
-  canvas.height = firstFrame.naturalHeight;
+  frames[0] = await loadFrame(heroFrameUrl(device, 0));
+  await decodeNow(0);
+  canvas.width = bitmaps.get(0)!.width;
+  canvas.height = bitmaps.get(0)!.height;
 
   if (reducedMotion) {
     frames[LAST_FRAME] = await loadFrame(heroFrameUrl(device, LAST_FRAME));
+    await decodeNow(LAST_FRAME);
     if (tagline) tagline.style.opacity = '0';
     cta?.setAttribute('data-visible', '');
     sparks?.setAttribute('data-visible', '');
@@ -91,9 +138,9 @@ export async function startHeroSequence() {
   const worker = async () => {
     for (let index = queue.shift(); index !== undefined; index = queue.shift()) {
       frames[index] = await loadFrame(heroFrameUrl(device, index)).catch(() => undefined);
-      if (index <= currentFrame) draw();
+      if (Math.abs(index - currentFrame) <= DECODED_RADIUS) decodeAround(currentFrame);
     }
   };
   await Promise.all(Array.from({ length: LOAD_CONCURRENCY }, worker));
-  draw();
+  decodeAround(currentFrame);
 }

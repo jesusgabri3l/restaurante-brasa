@@ -106,15 +106,35 @@ export function startParticles() {
     };
   };
 
+  // Cada semilla se pinta una vez (ya desenfocada) en su propio canvas pequeño: context.filter = blur()
+  // en cada frame era lo más caro del hero y daba tirones al soltar el pin.
+  const sprites = new WeakMap<Seed, { canvas: HTMLCanvasElement; width: number; height: number }>();
+  const spriteOf = (s: Seed) => {
+    const cached = sprites.get(s);
+    if (cached) return cached;
+    const height = s.size * (s.image.naturalHeight / s.image.naturalWidth);
+    const pad = s.blur * 3;
+    const sprite = document.createElement('canvas');
+    sprite.width = Math.ceil((s.size + pad * 2) * dpr);
+    sprite.height = Math.ceil((height + pad * 2) * dpr);
+    const spriteContext = sprite.getContext('2d')!;
+    spriteContext.scale(dpr, dpr);
+    spriteContext.imageSmoothingQuality = 'high';
+    if (s.blur) spriteContext.filter = `blur(${s.blur}px)`;
+    spriteContext.drawImage(s.image, pad, pad, s.size, height);
+    const result = { canvas: sprite, width: s.size + pad * 2, height: height + pad * 2 };
+    sprites.set(s, result);
+    return result;
+  };
+
   const drawSeed = (s: Seed) => {
     if (!s.image.complete || !s.image.naturalWidth) return;
+    const sprite = spriteOf(s);
     context.save();
     context.translate(s.x + parallax.x * s.depth, s.y + parallax.y * s.depth);
     context.rotate(s.angle);
     context.globalAlpha = s.alpha;
-    if (s.blur) context.filter = `blur(${s.blur * dpr}px)`;
-    const height = s.size * (s.image.naturalHeight / s.image.naturalWidth);
-    context.drawImage(s.image, -s.size / 2, -height / 2, s.size, height);
+    context.drawImage(sprite.canvas, -sprite.width / 2, -sprite.height / 2, sprite.width, sprite.height);
     context.restore();
   };
 
