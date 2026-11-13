@@ -89,15 +89,24 @@ export function startMenuTabs() {
   document.querySelectorAll<HTMLElement>('[data-menu-card]').forEach((card) => {
     const image = card.querySelector<HTMLElement>('.menu-card__image');
     if (!image) return;
+    // quickTo reutiliza un solo tween por propiedad: con gsap.to cada pointermove apilaba tweens nuevos.
+    gsap.set(image, { transformPerspective: 600 });
+    const rotateY = gsap.quickTo(image, 'rotationY', { duration: 0.4, ease: 'power3' });
+    const rotateX = gsap.quickTo(image, 'rotationX', { duration: 0.4, ease: 'power3' });
+    const rotate = gsap.quickTo(image, 'rotation', { duration: 0.4, ease: 'power3' });
     card.addEventListener('pointermove', (event) => {
       if (event.pointerType !== 'mouse') return;
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
-      gsap.to(image, { rotationY: x * 14, rotationX: -y * 14, rotation: x * 4, duration: 0.4, transformPerspective: 600 });
+      rotateY(x * 14);
+      rotateX(-y * 14);
+      rotate(x * 4);
     });
     card.addEventListener('pointerleave', () => {
-      gsap.to(image, { rotationY: 0, rotationX: 0, rotation: 0, duration: 0.6, ease: 'power3.out' });
+      rotateY(0);
+      rotateX(0);
+      rotate(0);
     });
   });
 }
